@@ -1,27 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
+
+import {Grid, List} from "@material-ui/core";
+import MenuItem from "./Components/Menu";
+import GameSelectorComponent from "./Components/Game/GameSelectorComponent";
 
 function App() {
     return (
         <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.js</code> and save to reload.
-                </p>
-                <p>
-                    change pushed is reflected!
-                    this is first change
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React
-                </a>
-            </header>
+            <Grid container spacing={3}>
+                <Grid item>
+                    <List>
+                        <MenuItem category="GameShelf"/>
+                        <MenuItem category="Records"/>
+                    </List>
+                </Grid>
+                <Grid item>
+                    <GameSelectorComponent />
+                </Grid>
+            </Grid>
         </div>
     );
 }

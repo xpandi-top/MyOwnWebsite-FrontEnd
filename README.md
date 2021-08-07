@@ -5,6 +5,16 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Project documents
 https://docs.google.com/document/d/1aeqECtcC3guLxPdqRU6sR7IEdpuHvsCw9KihwOENOYs/edit?usp=sharing
 
+## Install Material
+
+from existing repo:
+`yarn install`
+
+from stratch:
+`yarn add @material-ui/core`
+
+https://material-ui.com/getting-started/installation/
+
 ## Available Scripts
 
 In the project directory, you can run:

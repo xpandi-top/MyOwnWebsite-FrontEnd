@@ -1,0 +1,23 @@
+[
+    {
+        "name": "Gloomhaven",
+        "description": "Gloomhaasdfq23fasdfven",
+        "numPlayers": [
+            1,
+            2,
+            3,
+            4
+        ]
+    },
+    {
+        "name": "Tapestry",
+        "description": "asdf232fawfe2",
+        "numPlayers": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ]
+    }
+]
