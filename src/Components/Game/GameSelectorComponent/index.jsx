@@ -7,7 +7,9 @@ import GameDetailsComponent from "../GameDetailsComponent";
 var selectedGame = games[0];
 
 class GameSelectorComponent extends React.Component {
-
+    // todo 多加几个games，多加点不同的信息看看放在一起怎么展示
+    // todo 中间游戏列表这一栏需要有按钮，增删游戏啥的；排序；filter
+    // todo 游戏的扩怎么表示
     render() {
         return (
             <Grid container spacing={3}>

@@ -34,8 +34,6 @@ jobs:
       - run: yarn install
       - run: yarn build
 
-      - run: echo 'yarn build finish'
-
       - name: deploy to host
         uses: easingthemes/ssh-deploy@main
         env:
