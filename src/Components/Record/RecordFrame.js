@@ -42,7 +42,6 @@ function DateAndTimePickers(props) {
 }
 
 function RecordFrame() {
-    const classes = useStyles();
         return (
             <Grid container alignItems={"center"}>
                 <Grid container>
