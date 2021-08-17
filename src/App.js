@@ -1,10 +1,10 @@
 import './App.css';
 
-import RecordFrame from "./Components/Record/RecordFrame";
+import PermanentDrawerLeft from "./Components/Menu/MenuDrawer";
 function App() {
     return (
         <div className="App">
-            <RecordFrame />
+            <PermanentDrawerLeft/>
         </div>
     );
 }

@@ -41,6 +41,18 @@ function DateAndTimePickers(props) {
     );
 }
 
+function getGames() {
+    console.log("Fetching games");
+    fetch("http://localhost:8080/api/games")
+        .then(res => {
+            console.log(res);
+        });;
+    fetch("http://localhost:8080/api/game/Tapestry")
+        .then(res => {
+            console.log(res);
+        });
+}
+
 function RecordFrame() {
         return (
             <Grid container alignItems={"center"}>
@@ -55,7 +67,7 @@ function RecordFrame() {
                         <TextField label={"BoardGame"}></TextField>
                     </Grid>
                     <Grid item>
-                        <Button> Save </Button>
+                        <Button onClick={getGames}> Save </Button>
                     </Grid>
                     <Grid item>
                         <Button> Redo </Button>
@@ -63,7 +75,7 @@ function RecordFrame() {
                 </Grid>
                 <Grid container>
                     <Grid>
-                        <Grid item direction={"column"}>
+                        <Grid item>
                             <Button> Add Player</Button>
                         </Grid>
                         <Grid item>
