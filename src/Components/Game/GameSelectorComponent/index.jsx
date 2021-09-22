@@ -4,7 +4,7 @@ import {Card, CardContent, Grid, List, Typography} from "@material-ui/core";
 import games from '../../../data/games.json';
 import GameDetailsComponent from "../GameDetailsComponent";
 
-var selectedGame = games[0];
+const selectedGame = games[0];
 
 class GameSelectorComponent extends React.Component {
     // todo 多加几个games，多加点不同的信息看看放在一起怎么展示

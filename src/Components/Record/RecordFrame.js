@@ -1,7 +1,7 @@
 import React from "react";
-import {Button, Grid, makeStyles} from "@material-ui/core";
-import {TextField} from "@material-ui/core";
+import {Button, Grid, makeStyles, TextField} from "@material-ui/core";
 import RecordScore from "./RecordScore";
+// purpose: for create record and save to file
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -17,79 +17,119 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const dummy = function () {
-    console.log("clicked!");
-}
-
 // remember in function parameters, add props
 function DateAndTimePickers(props) {
     const classes = useStyles();
-    return (
-        <>
-            <form className={classes.container} noValidate>
-                <TextField
-                    id="datetime-local"
-                    // here simply use props.whatever
-                    label={props.label ? props.label: "Default"}
+    return (<TextField
+                    label={props.label ? props.label : "Default"}
+                    value={props.value}
+                    onChange={props.onChange}
                     type={"datetime-local"}
-                    defaultValue={"2020-08-10T12:00"}
                     className={classes.textField}
-                    inputProps={{shrink: "true"}}
-                />
-            </form>
-        </>
+                    fullWidth={true}
+                />);
+}
+
+function RecordFrame(props) {
+    console.log("numsplayer: ", props.numPlayer);
+    const numsPlayer = props.numPlayer;
+    const setNumsPlayer = props.setNumsPlayer;
+    const listItems = numsPlayer.map((playmakers,index) =>
+        <Grid item key={index}>
+            <RecordScore
+                player={playmakers.player}
+                score={playmakers.score}
+                notes={playmakers.notes}
+                numsPlayer={numsPlayer}
+                mySetPlayer={setNumsPlayer}
+                index={index}
+            />
+            <Button onClick={()=>deletePlayer(index)}>Delete</Button>
+        </Grid>
     );
-}
-
-function getGames() {
-    console.log("Fetching games");
-    fetch("http://localhost:8080/api/games")
-        .then(res => {
-            console.log(res);
-        });;
-    fetch("http://localhost:8080/api/game/Tapestry")
-        .then(res => {
-            console.log(res);
+    function deletePlayer(i) {
+        let arr;
+        if (i===0){
+            arr = numsPlayer.slice(1);
+        }else {
+            arr = numsPlayer.slice(0, i).concat(numsPlayer.slice(i+1))
+        }
+        setNumsPlayer(arr);
+    }
+    function addPlayer(){
+        let numP = numsPlayer.map(p => p.player);
+        let i = 0;
+        while (numP.includes("player".concat(i.toString()))){
+            i ++;
+        }
+        let numsPlayerCopy = numsPlayer.slice();
+        numsPlayerCopy.push({
+            player: "player".concat(i.toString()),
+                score:i,
+                notes:"notes".concat(i.toString())
         });
-}
-
-function RecordFrame() {
-        return (
-            <Grid container alignItems={"center"}>
-                <Grid container>
-                    <Grid item>
-                        <DateAndTimePickers label="Start Time"/>
-                    </Grid>
-                    <Grid item>
-                        <DateAndTimePickers label="End Time" />
-                    </Grid>
-                    <Grid item>
-                        <TextField label={"BoardGame"}></TextField>
-                    </Grid>
-                    <Grid item>
-                        <Button onClick={getGames}> Save </Button>
-                    </Grid>
-                    <Grid item>
-                        <Button> Redo </Button>
-                    </Grid>
+        console.log(numsPlayerCopy);
+        setNumsPlayer(numsPlayerCopy);
+    }
+    const handleChangeBoardGameName = (event) =>{
+        let val = event.target.value;
+        props.setBoardGameName(val);
+    }
+    const handleChangeStartTime = (event) =>{
+        let val = event.target.value;
+        props.setStartTime(val);
+    }
+    const handleChangeEndTime = (event) =>{
+        let val = event.target.value;
+        props.setEndTime(val);
+    }
+    const submit = () => {
+      console.log(props.boardGameName);
+      console.log(props.startTime);
+      console.log(props.endTime);
+      let gameName = props.boardGameName;
+      let starTime = props.startTime;
+      let endTime = props.endTime;
+      let recordId = props.recordId;
+        props.addToDataBase(recordId,gameName,starTime,endTime,numsPlayer);
+      // reload games getAllRecords()
+        props.refreshRecords();
+        window.alert("submit success!!")
+        window.location.reload();
+    }
+    const redo = () => {
+        window.location.reload();
+    }
+    return (
+        <Grid container alignItems={"center"}>
+            <Grid container>
+                <Grid item >
+                    <DateAndTimePickers label="Start Time" value={props.startTime} onChange={handleChangeStartTime}/>
                 </Grid>
-                <Grid container>
-                    <Grid>
-                        <Grid item>
-                            <Button> Add Player</Button>
-                        </Grid>
-                        <Grid item>
-                            <Button> Delete Player</Button>
-                        </Grid>
-
-                    </Grid>
-                    <Grid item>
-                        <RecordScore />
-                    </Grid>
+                <Grid item >
+                    <DateAndTimePickers label="End Time" value={props.endTime} onChange={handleChangeEndTime}/>
+                </Grid>
+                <Grid item >
+                    <TextField label={"BoardGame"} value={props.boardGameName} onChange={handleChangeBoardGameName} />
+                </Grid>
+                <Grid item >
+                    <Button onClick={submit}> Submit </Button>
+                </Grid>
+                <Grid item >
+                    <Button onClick={redo}> Redo </Button>
                 </Grid>
             </Grid>
+            <Grid container direction="row">
+                <Grid item>
+                    <Button onClick={addPlayer}> Add Player</Button>
+                </Grid>
+            </Grid>
+            <Grid container direction={"row"} spacing={3}>
+                {listItems}
+            </Grid>
+        </Grid>
 
-        );
+    );
 
 
 }

@@ -15,6 +15,8 @@ import DvrOutlinedIcon from "@material-ui/icons/DvrOutlined";
 import DashboardRoundedIcon from '@material-ui/icons/DashboardRounded';
 import PeopleAltOutlinedIcon from '@material-ui/icons/PeopleAltOutlined';
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
+import RecordList from "../Record/RecordList";
+import TimelineIcon from '@material-ui/icons/Timeline';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -41,11 +43,50 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function PermanentDrawerLeft() {
+function PresentContent(props){
+    if (props.content==="Records"){
+        // return(RecordList(props.content));
+        return <div>
+            <RecordFrame
+                numPlayer={props.numPlayer}
+                setNumsPlayer={props.mySetPlayer}
+                boardGameName={props.boardGameName}
+                startTime={props.startTime}
+                endTime = {props.endTime}
+                setBoardGameName={props.setBoardGameName}
+                setStartTime={props.setStartTime}
+                setEndTime={props.setEndTime}
+                addToDataBase={props.addToDataBase}
+                refreshRecords={props.refreshRecords}
+                recordId = {props.recordId}
+            />
+            <Divider/>
+            <RecordList
+                content={props.content}
+                records={props.records}
+                mytestfunction={(a) => {console.log("function is called!!", a)}}
+            />;
+        </div>
+    }
+    if (props.content==="Games"){
+        return <div>this is Games</div>;
+    }
+    if (props.content==="Players"){
+        return <div>this is player </div>
+    }
+    if (props.content==="Campaigns"){
+        return <div>this is Campaigns </div>
+    }
+    return <div>this is setting</div>;
+}
+
+function PermanentDrawerLeft(props) {
+    const records = props.recordStates.records;
+    const recordId = records[records.length-1]?records[records.length-1].recordId+1:0;
     const classes = useStyles();
     const [content, setContent] = React.useState("Records");
-    const handleClick = (props) => {
-        setContent(props? props: "set");
+    const handleClick = (str) => {
+        setContent(str);
     };
     return (
         <div className={classes.root}>
@@ -81,11 +122,15 @@ function PermanentDrawerLeft() {
                         <ListItemIcon> <PeopleAltOutlinedIcon/> </ListItemIcon>
                         <ListItemText primary={"Players"}/>
                     </ListItem>
+                    <ListItem button onClick={() => handleClick("Campaigns")} key={"Campaigns"}>
+                        <ListItemIcon> <TimelineIcon/> </ListItemIcon>
+                        <ListItemText primary={"Campaigns"}/>
+                    </ListItem>
 
                 </List>
                 <Divider/>
                 <List>
-                    <ListItem button key={"Setting"}>
+                    <ListItem button onClick={() => handleClick("Setting")} key={"Setting"}>
                         <ListItemIcon> <SettingsOutlinedIcon/> </ListItemIcon>
                         <ListItemText primary={"Setting"}/>
                     </ListItem>
@@ -93,7 +138,22 @@ function PermanentDrawerLeft() {
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.toolbar}/>
-                <RecordFrame/>
+                {/*{PresentContent(content, records, props.numPlayer)}*/}
+                <PresentContent
+                    content={content}
+                    records={records}
+                    numPlayer={props.recordStates.playerScore}
+                    mySetPlayer={props.recordStates.mySetPlayer}
+                    boardGameName={props.recordStates.gameName}
+                    startTime={props.recordStates.startTime}
+                    endTime={props.recordStates.endTime}
+                    setBoardGameName={props.recordStates.mySetGameName}
+                    setStartTime={props.recordStates.mySetStartTime}
+                    setEndTime={props.recordStates.mySetEndTime}
+                    addToDataBase={props.recordStates.addRecordToDataBase}
+                    refreshRecords={props.recordStates.refreshRecords}
+                    recordId = {recordId}
+                />
             </main>
         </div>
     );
