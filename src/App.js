@@ -34,43 +34,40 @@ const addRecordToDataBase = function (recordId,boardGame, startTime, endTime, pl
 
 
 function App() {
-    Date.prototype.format = function (fmt) {
+    const currString = (fmt,date) => {
         const o = {
-            "M+": this.getMonth() + 1,                   //月份
-            "d+": this.getDate(),                        //日
-            "h+": this.getHours(),                       //小时
-            "m+": this.getMinutes(),                     //分
-            "s+": this.getSeconds(),                     //秒
-            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-            "S": this.getMilliseconds()                  //毫秒
+            "M+": date.getMonth() + 1,                   //月份
+            "d+": date.getDate(),                        //日
+            "h+": date.getHours(),                       //小时
+            "m+": date.getMinutes(),                     //分
+            "s+": date.getSeconds(),                     //秒
+            "q+": Math.floor((date.getMonth() + 3) / 3), //季度
+            "S": date.getMilliseconds()                  //毫秒
         };
 
-        //  获取年份
         if (/(y+)/i.test(fmt)) {
-            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
         }
 
         for (const k in o) {
-            // ②
             if (new RegExp("(" + k + ")", "i").test(fmt)) {
                 fmt = fmt.replace(
                     RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
             }
         }
-        return fmt;
+      return fmt;
     }
-    Date.prototype.addHours= function(h){
-        this.setHours(this.getHours()+h);
-        return this;
+    const laterString = (fmt,date) => {
+      date.setHours(date.getHours()+1);
+      return currString(fmt,date);
     }
     const now = new Date();
-    const nowStr = now.format("YYYY-MM-DDThh:mm");
+    const nowStr = currString("YYYY-MM-DDThh:mm",now);
     const [records, setRecords] = useState([]);
-
     const [gameName, setGameName] = useState("Brass");
     const [describe, setDescribe] = useState("this is brass");
     const [startTime, setStartTime] = useState(nowStr);
-    const [endTime, setEndTime] = useState(now.addHours(1).format("YYYY-MM-DDThh:mm"));
+    const [endTime, setEndTime] = useState(laterString("YYYY-MM-DDThh:mm",now));
     const [numsPlayer, setNumsPlayer] = useState([]);
 
     const mySetGameName = (_gameName) => {
@@ -118,8 +115,6 @@ function App() {
     // get all records
     useEffect(() => {
         getAllRecords();
-
-        console.log(now.toISOString())
     },[])
 
 
