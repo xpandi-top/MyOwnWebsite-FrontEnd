@@ -16,10 +16,10 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import TablePagination from '@mui/material/TablePagination';
 import Autocomplete from '@mui/material/Autocomplete';
-import {TextField} from "@material-ui/core";
+import {TableSortLabel, TextField} from "@material-ui/core";
 import {Grid} from "@material-ui/core";
 import Button from "@mui/material/Button";
-import Divider from "@material-ui/core/Divider";
+import { visuallyHidden } from '@mui/utils';
 const useRowStyles = makeStyles({
     root: {
         '& > *': {
@@ -27,15 +27,113 @@ const useRowStyles = makeStyles({
         },
     },
 });
+function descendingComparator(a, b, orderBy) {
+    let bb = orderBy==="duration"?duration(b["startTime"],b["endTime"]):b[orderBy];
+    let aa =orderBy==="duration"?duration(a["startTime"],a["endTime"]):a[orderBy];
+
+    if (bb < aa) {
+        return 1;
+    }
+    if (bb > aa) {
+        return -1;
+    }
+    return 0;
+}
+const duration = (date1, date2) => {
+    let minutes = Date.parse(date2)-Date.parse(date1);
+    return minutes/1000/60
+}
+function getComparator(order, orderBy) {
+    return order === 'desc'
+        ? (a, b) => descendingComparator(a, b, orderBy)
+        : (a, b) => -descendingComparator(a, b, orderBy);
+}
+// This method is created for cross-browser compatibility, if you don't
+// need to support IE11, you can use Array.prototype.sort() directly
+function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+        const order = comparator(a[0], b[0]);
+        if (order !== 0) {
+            return order;
+        }
+        return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+}
+const headCells = [
+    {
+        id: 'gameName',
+        numeric: false,
+        disablePadding: true,
+        label: 'Board Game',
+    },
+    {
+        id: 'description',
+        numeric: false,
+        disablePadding: false,
+        label: 'Description',
+    },
+    {
+        id: 'startTime',
+        numeric: false,
+        disablePadding: false,
+        label: 'Start Time',
+    },
+    {
+        id: 'duration',
+        numeric: true,
+        disablePadding: false,
+        label: 'Duration (minute)',
+    },
+];
+function EnhancedTableHead(props) {
+    const {order, orderBy, onRequestSort } =
+        props;
+    const createSortHandler = (property) => (event) => {
+        onRequestSort(event, property);
+    };
+
+    return (
+        <TableHead>
+            <TableRow>
+                <TableCell/>
+                {headCells.map((headCell) => (
+                    <TableCell
+                        key={headCell.id}
+                        align={'left'}
+                        padding={headCell.disablePadding ? 'none' : 'normal'}
+                        sortDirection={orderBy === headCell.id ? order : false}
+                    >
+                        <TableSortLabel
+                            active={orderBy === headCell.id}
+                            direction={orderBy === headCell.id ? order : 'asc'}
+                            onClick={createSortHandler(headCell.id)}
+                        >
+                            {headCell.label}
+                            {orderBy === headCell.id ? (
+                                <Box component="span" sx={visuallyHidden}>
+                                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                </Box>
+                            ) : null}
+                        </TableSortLabel>
+                    </TableCell>
+                ))}
+            </TableRow>
+        </TableHead>
+    );
+}
+EnhancedTableHead.propTypes = {
+    onRequestSort: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+    orderBy: PropTypes.string.isRequired,
+};
 
 function Row(props) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
     const classes = useRowStyles();
-    const duration = (date1, date2) => {
-      let minutes = Date.parse(date2)-Date.parse(date1);
-      return minutes/1000/60
-    }
+
     return (
         <React.Fragment>
             <TableRow hover className={classes.root} role="checkbox" tabIndex={-1}>
@@ -90,7 +188,6 @@ function Row(props) {
         </React.Fragment>
     );
 }
-
 Row.propTypes = {
     row: PropTypes.shape({
         gameName: PropTypes.string.isRequired,
@@ -111,6 +208,14 @@ function RecordList(props) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+    const [order, setOrder] = React.useState('asc');
+    const [orderBy, setOrderBy] = React.useState('startTime');
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
+
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -122,10 +227,11 @@ function RecordList(props) {
     const defaultProps = {
         options: [...new Set(props.records.map((option) => option.gameName))],
     };
+    const records = props.records;
     return(
         <Paper>
-            <Grid container>
-                <Grid item>
+            <Grid container spacing={2}>
+                <Grid item >
                     <Autocomplete
                         {...defaultProps}
                         id="combo-box-demo"
@@ -134,30 +240,25 @@ function RecordList(props) {
                     />
                 </Grid>
                 <Grid item>
-                    <Button>
+                    <Button variant="outlined">
                         Apply
                     </Button>
                 </Grid>
-                <Grid item>
-                    <Button>
+                <Grid item >
+                    <Button variant="outlined">
                         Cancel
                     </Button>
                 </Grid>
             </Grid>
-            <Divider/>
             <TableContainer>
                 <Table stickyHeader={true} aria-label="collapsible table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell />
-                            <TableCell>BoardGame</TableCell>
-                            <TableCell align="left">Description</TableCell>
-                            <TableCell align="left">Start Time</TableCell>
-                            <TableCell align="left">Duration(minutes)</TableCell>
-                        </TableRow>
-                    </TableHead>
+                    <EnhancedTableHead
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                    />
                     <TableBody>
-                        {props.records
+                        {stableSort(records,getComparator(order, orderBy))
                             .slice()
                             .reverse()
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
