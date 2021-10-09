@@ -15,11 +15,13 @@ import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import TablePagination from '@mui/material/TablePagination';
-import Autocomplete from '@mui/material/Autocomplete';
-import {TableSortLabel, TextField} from "@material-ui/core";
+import {TableSortLabel} from "@material-ui/core";
 import {Grid} from "@material-ui/core";
-import Button from "@mui/material/Button";
-import { visuallyHidden } from '@mui/utils';
+import {visuallyHidden } from '@mui/utils';
+import FormControl from '@mui/material/FormControl';
+import NativeSelect from '@mui/material/NativeSelect';
+import FormLabel from "@mui/material/FormLabel";
+
 const useRowStyles = makeStyles({
     root: {
         '& > *': {
@@ -32,10 +34,10 @@ function descendingComparator(a, b, orderBy) {
     let aa =orderBy==="duration"?duration(a["startTime"],a["endTime"]):a[orderBy];
 
     if (bb < aa) {
-        return 1;
+        return -1;
     }
     if (bb > aa) {
-        return -1;
+        return 1;
     }
     return 0;
 }
@@ -61,6 +63,7 @@ function stableSort(array, comparator) {
     });
     return stabilizedThis.map((el) => el[0]);
 }
+
 const headCells = [
     {
         id: 'gameName',
@@ -205,49 +208,53 @@ Row.propTypes = {
 };
 function RecordList(props) {
     console.log("In RecordList!!!");
+    const records = props.records;
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-    const [order, setOrder] = React.useState('asc');
+    const [order, setOrder] = React.useState('desc');
     const [orderBy, setOrderBy] = React.useState('startTime');
+    const [filterBy, setFilterBy] = React.useState('');
+    
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
-
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
-
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
+    const handleFilterChange = (event) => {
+      setFilterBy(event.target.value);
+      console.log(filterBy);
+    }
+    
     const defaultProps = {
         options: [...new Set(props.records.map((option) => option.gameName))],
     };
-    const records = props.records;
+
     return(
         <Paper>
             <Grid container spacing={2}>
                 <Grid item >
-                    <Autocomplete
-                        {...defaultProps}
-                        id="combo-box-demo"
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} label="Filter By GameName" variant="standard"/>}
-                    />
-                </Grid>
-                <Grid item>
-                    <Button variant="outlined">
-                        Apply
-                    </Button>
-                </Grid>
-                <Grid item >
-                    <Button variant="outlined">
-                        Cancel
-                    </Button>
+                    <FormControl fullWidth>
+                        <FormLabel component="legend">Filter By Game Name</FormLabel>
+                        <NativeSelect defaultValue={''}
+                                      inputProps={{
+                                          name: 'boardGameFilter',
+                                          id: 'uncontrolled-native',
+                                      }}
+                                      onChange={handleFilterChange} aria-label={"Filter by"} >
+                            <option value={''} key={"all"}> All records</option>
+                            {defaultProps.options.map((opt)=>(
+                                <option value={opt} key={opt}>{opt}</option>
+                            ))}
+                        </NativeSelect>
+                    </FormControl>
                 </Grid>
             </Grid>
             <TableContainer>
@@ -260,7 +267,7 @@ function RecordList(props) {
                     <TableBody>
                         {stableSort(records,getComparator(order, orderBy))
                             .slice()
-                            .reverse()
+                            .filter(record=>(filterBy===''||record["gameName"]===filterBy))
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row) => (
                             <Row key={row.recordId} row={row} />
@@ -271,7 +278,7 @@ function RecordList(props) {
             <TablePagination
                 rowsPerPageOptions={[5, 15, 100]}
                 component="div"
-                count={props.records.length}
+                count={records.filter(record=>(filterBy===''||record["gameName"]===filterBy)).length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
