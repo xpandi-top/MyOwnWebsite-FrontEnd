@@ -1,6 +1,6 @@
 import React from "react";
-import {Button, Grid, makeStyles, TextField} from "@material-ui/core";
 import RecordScore from "./RecordScore";
+import {Button, Grid, makeStyles, TextField} from "@mui/material";
 // purpose: for create record and save to file
 const useStyles = makeStyles((theme) => ({
     root: {

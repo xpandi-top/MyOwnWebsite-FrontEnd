@@ -1,22 +1,24 @@
 import React from 'react';
-import {makeStyles} from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+
 import RecordFrame from "../Record/RecordFrame";
-import DvrOutlinedIcon from "@material-ui/icons/DvrOutlined";
-import DashboardRoundedIcon from '@material-ui/icons/DashboardRounded';
-import PeopleAltOutlinedIcon from '@material-ui/icons/PeopleAltOutlined';
-import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 import RecordList from "../Record/RecordList";
-import TimelineIcon from '@material-ui/icons/Timeline';
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import DvrOutlinedIcon from '@mui/icons-material/DvrOutlined';
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
+import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
+import {
+    AppBar,
+    CssBaseline,
+    Divider,
+    Drawer,
+    List,
+    ListItem,
+    ListItemIcon, ListItemText,
+    makeStyles,
+    Toolbar,
+    Typography
+} from "@mui/material";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -115,7 +117,7 @@ function PermanentDrawerLeft(props) {
                         <ListItemText primary={"Records"}/>
                     </ListItem>
                     <ListItem button onClick={() => handleClick("Games")} key={"Games"}>
-                        <ListItemIcon> <DashboardRoundedIcon/> </ListItemIcon>
+                        <ListItemIcon> <DashboardOutlinedIcon/> </ListItemIcon>
                         <ListItemText primary={"Games"}/>
                     </ListItem>
                     <ListItem button onClick={() => handleClick("Players")} key={"Players"}>
@@ -123,7 +125,7 @@ function PermanentDrawerLeft(props) {
                         <ListItemText primary={"Players"}/>
                     </ListItem>
                     <ListItem button onClick={() => handleClick("Campaigns")} key={"Campaigns"}>
-                        <ListItemIcon> <TimelineIcon/> </ListItemIcon>
+                        <ListItemIcon> <TimelineOutlinedIcon/> </ListItemIcon>
                         <ListItemText primary={"Campaigns"}/>
                     </ListItem>
 

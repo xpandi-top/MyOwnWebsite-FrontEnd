@@ -1,26 +1,22 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import TablePagination from '@mui/material/TablePagination';
-import {TableSortLabel} from "@material-ui/core";
-import {Grid} from "@material-ui/core";
 import {visuallyHidden } from '@mui/utils';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
 import FormLabel from "@mui/material/FormLabel";
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import {
+    Box,
+    Collapse, Grid,
+    IconButton,
+    makeStyles, Paper, Table, TableBody,
+    TableCell, TableContainer,
+    TableHead, TablePagination,
+    TableRow,
+    TableSortLabel,
+    Typography
+} from "@mui/material";
 
 const useRowStyles = makeStyles({
     root: {

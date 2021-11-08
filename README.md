@@ -11,9 +11,7 @@ from existing repo:
 `yarn install`
 
 from stratch:
-`yarn add @material-ui/core`
-
-https://material-ui.com/getting-started/installation/
+`yarn add @mui/material`
 
 ## Available Scripts
 
