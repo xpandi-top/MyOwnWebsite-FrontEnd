@@ -15,13 +15,13 @@ import {
     List,
     ListItem,
     ListItemIcon, ListItemText,
-    makeStyles,
     Toolbar,
     Typography
 } from "@mui/material";
+import styled from "@emotion/styled";
 
 const drawerWidth = 240;
-const useStyles = makeStyles((theme) => ({
+const useStyles = styled((theme) => ({
     root: {
         display: 'flex',
     },

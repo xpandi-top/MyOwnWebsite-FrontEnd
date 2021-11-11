@@ -1,8 +1,10 @@
 import React from "react";
 import RecordScore from "./RecordScore";
-import {Button, Grid, makeStyles, TextField} from "@mui/material";
+import {Button, Grid, TextField} from "@mui/material";
+import styled from "@emotion/styled";
+
 // purpose: for create record and save to file
-const useStyles = makeStyles((theme) => ({
+const useStyles = styled((theme) => ({
     root: {
         flexGrow: 1,
     },
