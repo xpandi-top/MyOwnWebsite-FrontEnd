@@ -1,25 +1,20 @@
 import {useEffect, useState} from "react";
-import {Typography} from "@mui/material";
+import {getALLRecords} from "../../services/recordsService";
+import RecordsList from "./RecordsList";
 
 
-export default function RecordsContainer(props) {
-    const [recordsList, setRecordsList] = useState();
+export default function RecordsContainer() {
+    const [recordsList, setRecordsList] = useState([]);
 
     useEffect(() => {
-        // getALLRecords(setRecordsList, console.log);
-        console.log("Initializing RecordsContainer", props);
-        setRecordsList("settting state");
-        // for testing for now, if error log out the error object
+        getALLRecords()
+            .then((response) => setRecordsList(response.data))
+            .catch((error) => console.log(error));
     },[]);
 
     return (
         <div>
-            <Typography>
-                This is RecordsContainer
-            </Typography>
-            <Typography>
-                {recordsList}
-            </Typography>
+            <RecordsList records={recordsList} />
         </div>
     );
 }

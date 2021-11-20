@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Button, Stack, TextField} from "@mui/material";
+import {Button, Stack, TextField, Typography} from "@mui/material";
 
 export default function LoginContainer(props) {
     const [username, setUsername] = useState();
@@ -8,6 +8,7 @@ export default function LoginContainer(props) {
     return (
         // todo: set width for this stack
         <Stack spacing={2}>
+            <Typography>{props.msg}</Typography>
             <TextField
                 label="username"
                 variant="outlined"

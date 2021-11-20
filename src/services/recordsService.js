@@ -1,7 +1,7 @@
 import axios from "axios";
 import {baseUrl} from "../constants/UrlConstants";
+import {getAuthHeader} from "./authService";
 
-export const getALLRecords = (successCallback, failedCallback) => axios.get(`${baseUrl}/records`)
-    .then((response) => successCallback(response.data))
-    .catch((error) => failedCallback(error));
+export const getALLRecords = () =>  axios.get(`${baseUrl}/records`, {headers: getAuthHeader()})
+
 
