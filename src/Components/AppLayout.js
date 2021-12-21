@@ -16,7 +16,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import RecordsContainer from "./records/RecordsContainer";
 import LoginContainer from "./userAuth/LoginContainer";
 import {login} from "../services/authService";
@@ -77,9 +77,10 @@ const DrawerHeader = styled('div')(({theme}) => ({
 export default function AppLayout() {
     // const theme = useTheme(); todo: what is this?
     // todo: when app initialize, try to read local storage and see if user logged in
-    const [user, setUser] = useState({loggedIn: false});
-    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [user, setUser] = useState();
+    const [drawerOpen, setDrawerOpen] = useState(true);
     const [functionality, setFunctionality] = useState("Games");
+    const [msg, setMsg] = useState();
 
     const handleDrawerOpen = () => setDrawerOpen(true);
 
@@ -88,23 +89,16 @@ export default function AppLayout() {
     const handleLogin = function(loginData) {
         login(loginData).then(response => {
             // todo: redirect after login successful
-            localStorage.setItem("user", response.data.token);
-            setUser({
-                loggedIn: true,
-                username: response.data.username,
-                message: "Login Successful"
-            });
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("user", response.data.username);
+            setUser(response.data.username);
         }).catch(error => {
             // https://axios-http.com/docs/handling_errors
             if (error.response) {
                 if (error.response.status === 401) {
-                    setUser({
-                        message: "Invalid Credentials"
-                    });
+                    setMsg("Invalid Credentials");
                 } else {
-                    setUser({
-                        message: "Something wrong at backend"
-                    });
+                    setMsg("Something wrong at backend");
                 }
             } else if (error.request) {
                 console.log(error.request);
@@ -125,12 +119,26 @@ export default function AppLayout() {
             case "Users":
                 return (<LoginContainer
                     callBack={handleLogin}
-                    msg={user.message}
+                    msg={msg}
+                    user={user}
+                    signOut={() => {setUser(undefined)}}
                 />);
             default:
                 return <></>;
         }
     }
+
+    // when app init, load user from local storage
+    useEffect(() => {
+        const username = localStorage.getItem("user");
+        const token = localStorage.getItem("token");
+        if (username && token) {
+            setUser(username);
+        } else {
+            localStorage.removeItem("user");
+            localStorage.removeItem("token");
+        }
+    }, [])
 
     return (
         <div>
@@ -148,10 +156,10 @@ export default function AppLayout() {
                             <MenuIcon/>
                         </IconButton>
                         <Typography variant="h6" noWrap component="div">
-                            Persistent drawer
+                            Boardgame DB
                         </Typography>
                         <Typography variant="h6" noWrap component="div">
-                            &nbsp;{user.username}
+                            &nbsp;{user}
                         </Typography>
                     </Toolbar>
                 </AppBar>
