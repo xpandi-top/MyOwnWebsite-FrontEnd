@@ -169,7 +169,7 @@ function Row(props) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {row.numPlayers.map((playerRow) => (
+                                    {row.players.map((playerRow) => (
                                         <TableRow key={playerRow.player}>
                                             <TableCell component="th" scope="row">
                                                 {playerRow.player}
@@ -193,7 +193,7 @@ Row.propTypes = {
         description: PropTypes.string.isRequired,
         startTime: PropTypes.string.isRequired,
         endTime: PropTypes.string.isRequired,
-        numPlayers: PropTypes.arrayOf(
+        players: PropTypes.arrayOf(
             PropTypes.shape({
                 player: PropTypes.string.isRequired,
                 score: PropTypes.number.isRequired,

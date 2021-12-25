@@ -19,7 +19,7 @@ const addRecordToDataBase = function (recordId,boardGame, startTime, endTime, pl
         "description": description,
         "startTime": startTime,
         "endTime": endTime,
-        "numPlayers": players
+        "players": players
     }
 
     axios.post(

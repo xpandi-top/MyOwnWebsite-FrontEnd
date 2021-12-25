@@ -2,7 +2,7 @@
     {
         "name": "Gloomhaven",
         "description": "Gloomhaasdfq23fasdfven",
-        "numPlayers": [
+        "players": [
             1,
             2,
             3,
@@ -18,7 +18,7 @@
     {
         "name": "Tapestry",
         "description": "asdf232fawfe2",
-        "numPlayers": [
+        "players": [
             1,
             2,
             3,

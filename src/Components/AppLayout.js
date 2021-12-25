@@ -12,14 +12,12 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import {useEffect, useState} from "react";
 import RecordsContainer from "./records/RecordsContainer";
 import LoginContainer from "./userAuth/LoginContainer";
-import {login} from "../services/authService";
+import {BrowserRouter, Routes, Route, Link, Navigate} from "react-router-dom";
+import RecordFrame from "./Record/RecordFrame";
+import NewRecordContainer from "./records/NewRecordContainer";
 
 const drawerWidth = 240;
 
@@ -73,59 +71,39 @@ const DrawerHeader = styled('div')(({theme}) => ({
     justifyContent: 'flex-end',
 }));
 
-
 export default function AppLayout() {
+    const pages = [
+        {name:'Records', url:"records"},
+        {name:'New Record', url:"newrecord"},
+        {name:'Games', url:"games"},
+        {name:'Campaigns', url:"Campaigns"},
+        {name:'Users', url:"users"}
+    ];
     // const theme = useTheme(); todo: what is this?
-    // todo: when app initialize, try to read local storage and see if user logged in
     const [user, setUser] = useState();
     const [drawerOpen, setDrawerOpen] = useState(true);
-    const [functionality, setFunctionality] = useState("Games");
-    const [msg, setMsg] = useState();
 
-    const handleDrawerOpen = () => setDrawerOpen(true);
-
-    const handleDrawerClose = () => setDrawerOpen(false);
-
-    const handleLogin = function(loginData) {
-        login(loginData).then(response => {
-            // todo: redirect after login successful
-            localStorage.setItem("token", response.data.token);
-            localStorage.setItem("user", response.data.username);
-            setUser(response.data.username);
-        }).catch(error => {
-            // https://axios-http.com/docs/handling_errors
-            if (error.response) {
-                if (error.response.status === 401) {
-                    setMsg("Invalid Credentials");
-                } else {
-                    setMsg("Something wrong at backend");
-                }
-            } else if (error.request) {
-                console.log(error.request);
-            } else {
-                console.log('Error', error.message);
-            }
-        })
-    }
-
-    const renderMainView = function(functionality){
-        switch (functionality){
-            case "Games":
-                return <Typography>Games</Typography>;
-            case "Records":
-                return <RecordsContainer/>;
-            case "Campaigns":
-                return <Typography>Campaigns</Typography>;
-            case "Users":
-                return (<LoginContainer
-                    callBack={handleLogin}
-                    msg={msg}
-                    user={user}
-                    signOut={() => {setUser(undefined)}}
-                />);
-            default:
-                return <></>;
-        }
+    const renderMainRouter = function () {
+        return (
+            <Routes>
+                <Route path="/home" element={<Typography>Welcome to Boardgame DB</Typography>}/>
+                <Route path="/games" element={<Typography>Games</Typography>}/>
+                <Route path="/records" element={<RecordsContainer/>}/>
+                <Route path="/newrecord" element={<NewRecordContainer/>}/>
+                <Route path="/campaigns" element={<Typography>Campaigns</Typography>}/>
+                <Route path="/users" element={
+                    <LoginContainer
+                        user={user}
+                        signOut={() => {
+                            setUser(undefined)
+                        }}
+                        signIn={(username) => {
+                            setUser(username)
+                        }}
+                    />}/>
+                <Route path="*" element={<Navigate replace to="/home" />}/>
+            </Routes>
+        )
     }
 
     // when app init, load user from local storage
@@ -141,7 +119,7 @@ export default function AppLayout() {
     }, [])
 
     return (
-        <div>
+        <BrowserRouter>
             <Box sx={{display: 'flex'}}>
                 <CssBaseline/>
                 <AppBar position="fixed" open={drawerOpen}>
@@ -149,7 +127,7 @@ export default function AppLayout() {
                         <IconButton
                             color="inherit"
                             aria-label="open drawer"
-                            onClick={handleDrawerOpen}
+                            onClick={() => setDrawerOpen(true)}
                             edge="start"
                             sx={{mr: 2, ...(drawerOpen && {display: 'none'})}}
                         >
@@ -177,30 +155,24 @@ export default function AppLayout() {
                     open={drawerOpen}
                 >
                     <DrawerHeader>
-                        <IconButton onClick={handleDrawerClose}>
+                        <IconButton onClick={() => setDrawerOpen(false)}>
                             <ChevronLeftIcon/>
                         </IconButton>
                     </DrawerHeader>
                     <Divider/>
                     <List>
-                        {['Records', 'Games', 'Campaigns', 'Users'].map((text, index) => (
-                            <ListItem button key={text}
-                                      onClick={() => setFunctionality(text)}
-                                      // onClick={(e) => console.log(e)}
-                            >
-                                <ListItemIcon>
-                                    {index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}
-                                </ListItemIcon>
-                                <ListItemText primary={text}/>
+                        {pages.map((p, index) => (
+                            <ListItem key={p.url}>
+                                <Link to={p.url}>{p.name}</Link>
                             </ListItem>
                         ))}
                     </List>
                 </Drawer>
                 <Main open={drawerOpen}>
                     <DrawerHeader/>
-                    {renderMainView(functionality)}
+                    {renderMainRouter()}
                 </Main>
             </Box>
-        </div>
+        </BrowserRouter>
     );
 }
