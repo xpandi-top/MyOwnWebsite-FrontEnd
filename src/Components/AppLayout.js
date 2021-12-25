@@ -16,7 +16,6 @@ import {useEffect, useState} from "react";
 import RecordsContainer from "./records/RecordsContainer";
 import LoginContainer from "./userAuth/LoginContainer";
 import {BrowserRouter, Routes, Route, Link, Navigate} from "react-router-dom";
-import RecordFrame from "./Record/RecordFrame";
 import NewRecordContainer from "./records/NewRecordContainer";
 
 const drawerWidth = 240;
@@ -161,7 +160,7 @@ export default function AppLayout() {
                     </DrawerHeader>
                     <Divider/>
                     <List>
-                        {pages.map((p, index) => (
+                        {pages.map((p) => (
                             <ListItem key={p.url}>
                                 <Link to={p.url}>{p.name}</Link>
                             </ListItem>

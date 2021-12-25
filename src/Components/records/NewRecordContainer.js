@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import {Button, Grid, TextField} from "@mui/material";
 import styled from "@emotion/styled";
-import RecordScore from "../Record/RecordScore";
 import {saveRecord} from "../../services/recordsService";
 
 const useStyles = styled((theme) => ({
@@ -90,7 +89,7 @@ export default function NewRecordContainer() {
             "endTime": endTime,
             "players": players
         }
-        saveRecord(recordToSave).then((reponse) => {
+        saveRecord(recordToSave).then(() => {
             console.log("saved successfully");
             clear();
         });
