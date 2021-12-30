@@ -17,6 +17,8 @@ import RecordsContainer from "./records/RecordsContainer";
 import LoginContainer from "./userAuth/LoginContainer";
 import {BrowserRouter, Routes, Route, Link, Navigate} from "react-router-dom";
 import NewRecordContainer from "./records/NewRecordContainer";
+import GamesContainer from "./games/GamesContainer";
+import NewGameContainer from "./games/NewGameContainer";
 
 const drawerWidth = 240;
 
@@ -75,7 +77,7 @@ export default function AppLayout() {
         {name:'Records', url:"records"},
         {name:'New Record', url:"newrecord"},
         {name:'Games', url:"games"},
-        {name:'Campaigns', url:"Campaigns"},
+        // {name:'New Game', url:"newgame"},
         {name:'Users', url:"users"}
     ];
     // const theme = useTheme(); todo: what is this?
@@ -86,10 +88,10 @@ export default function AppLayout() {
         return (
             <Routes>
                 <Route path="/home" element={<Typography>Welcome to Boardgame DB</Typography>}/>
-                <Route path="/games" element={<Typography>Games</Typography>}/>
+                <Route path="/games" element={<GamesContainer/>}/>
                 <Route path="/records" element={<RecordsContainer/>}/>
                 <Route path="/newrecord" element={<NewRecordContainer/>}/>
-                <Route path="/campaigns" element={<Typography>Campaigns</Typography>}/>
+                <Route path="/newgame" element={<NewGameContainer/>}/>
                 <Route path="/users" element={
                     <LoginContainer
                         user={user}

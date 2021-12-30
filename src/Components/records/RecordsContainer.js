@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
-import {getALLRecords} from "../../services/recordsService";
 import RecordsList from "./RecordsList";
+import {getALLRecords} from "../services";
 
 
 export default function RecordsContainer() {

@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {Button, Stack, TextField, Typography} from "@mui/material";
-import {login} from "../../services/authService";
+import {login} from "../services";
 
 export default function LoginContainer(props) {
     const [username, setUsername] = useState();

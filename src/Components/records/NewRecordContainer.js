@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Button, Grid, TextField} from "@mui/material";
 import styled from "@emotion/styled";
-import {saveRecord} from "../../services/recordsService";
+import {saveRecord} from "../services";
 
 const useStyles = styled((theme) => ({
     root: {
@@ -34,13 +34,13 @@ function DateAndTimePickers(props) {
 export default function NewRecordContainer() {
     const [startTime, setStartTime] = useState(""); // todo: default to what
     const [endTime, setEndTime] = useState("");
-    const [gameName, setGameName] = useState("");
+    const [gameId, setGameId] = useState("");
     const [players, setPlayers] = useState([]);
 
     const clear = () => {
         setStartTime("");
         setEndTime("");
-        setGameName("");
+        setGameId("");
         setPlayers([]);
     }
 
@@ -83,8 +83,8 @@ export default function NewRecordContainer() {
 
     const submit = () => {
         let recordToSave = {
-            "gameName": gameName,
-            "description": `Description for ${gameName}`,
+            "gameId": gameId,
+            "description": `Description for ${gameId}`,
             "startTime": startTime,
             "endTime": endTime,
             "players": players
@@ -118,9 +118,9 @@ export default function NewRecordContainer() {
                 <Grid item>
                     <TextField
                         label="BoardGame"
-                        value={gameName}
+                        value={gameId}
                         onChange={(e) => {
-                            setGameName(e.target.value)
+                            setGameId(e.target.value)
                         }}/>
                 </Grid>
                 <Grid item>
