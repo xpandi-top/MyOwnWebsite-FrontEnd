@@ -18,6 +18,11 @@ export const getALLRecords = () =>  axios.get(`${baseUrl}/records`, {headers: ge
 
 export const saveRecord = (record) =>  axios.post(`${baseUrl}/record`, record,{headers: getAuthHeader()});
 
-export const getALLGames = () =>  axios.get(`${baseUrl}/games`, {headers: getAuthHeader()});
+export const getALLGames = () =>  axios.get(`${baseUrl}/games`);
+
+export const getGameNames = () =>  axios.get(`${baseUrl}/gamenames`);
+export const getGame = (game) =>  axios.get(`${baseUrl}/game/${game}`);
 
 export const saveGame = (game) =>  axios.post(`${baseUrl}/game`, game,{headers: getAuthHeader()});
+
+export const getPlayers = () =>  axios.get(`${baseUrl}/players`);

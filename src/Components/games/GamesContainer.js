@@ -1,10 +1,24 @@
 import {useEffect, useState} from "react";
 import {getALLGames} from "../services";
-import {Avatar, Card, CardContent, CardHeader, CardMedia, Chip, Grid, Typography} from "@mui/material";
+import {
+    Avatar,
+    Card,
+    CardActions,
+    CardContent,
+    CardHeader,
+    CardMedia,
+    Chip, Collapse,
+    Grid,
+    IconButton,
+    Typography
+} from "@mui/material";
 import Box from "@mui/material/Box";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 function GameCard(props) {
+    const [expanded, setExpanded] = useState(false);
     const game = props.game;
+
     return (<Card sx={{maxWidth: 400}}
     >
         <CardHeader
@@ -28,11 +42,20 @@ function GameCard(props) {
         <CardContent>
             {game.status && <Chip label={game.status} />}
         </CardContent>
-        {/*<CardActions disableSpacing>*/}
-        {/*    <Button>Details</Button>*/}
-        {/*</CardActions>*/}
-        {/*<Collapse in={expanded} timeout="auto" unmountOnExit>*/}
-        {/*</Collapse>*/}
+        <CardActions disableSpacing>
+            <IconButton
+                onClick={() => setExpanded(!expanded)}
+                aria-expanded={expanded}
+                aria-label="more"
+            >
+                <ExpandMoreIcon/>
+            </IconButton>
+        </CardActions>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <CardContent>
+                <Typography paragraph>{game.gameProperties["STRING_long_description"]}</Typography>
+            </CardContent>
+        </Collapse>
     </Card>);
 }
 
