@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {Button, Grid, InputLabel, MenuItem, Select, Stack, TextField} from "@mui/material";
+import {Button, Grid, InputLabel, MenuItem, Select, Stack, Switch, TextField} from "@mui/material";
 import styled from "@emotion/styled";
 import {getGame, getGameNames, getPlayers, saveRecord} from "../services";
 import FormControl from "@mui/material/FormControl";
+import Typography from "@mui/material/Typography";
 
 const useStyles = styled((theme) => ({
     root: {
@@ -52,7 +53,7 @@ export default function NewRecordContainer() {
     }, []);
 
     useEffect(() => {
-        if (gameSelected){
+        if (gameSelected) {
             getGame(gameSelected).then(response => {
                 setGameDetails(response.data);
             }).catch(error => {
@@ -108,7 +109,7 @@ export default function NewRecordContainer() {
     const submit = () => {
         let recordToSave = {
             ...record,
-            gameId:gameSelected,
+            gameId: gameSelected,
             players: players
         }
         console.log(recordToSave);
@@ -159,7 +160,7 @@ export default function NewRecordContainer() {
                         }}/>
                 </Grid>
             </Grid>
-            <Grid container>
+            <Grid container sx={{m:3}}>
                 {players.map((playerObj, idx) =>
                     <Grid item key={playerObj.key} rowSpacing={2}>
                         <Stack spacing={1}>
@@ -180,7 +181,7 @@ export default function NewRecordContainer() {
                                     })}
                                 </Select>
                             </FormControl>
-                            {gameDetail.factionDisplayName?(<FormControl fullWidth>
+                            {gameDetail.factionDisplayName ? (<FormControl fullWidth>
                                 <InputLabel>{gameDetail.factionDisplayName}</InputLabel>
                                 <Select autoWidth
                                         value={playerObj.faction || ""}
@@ -188,15 +189,15 @@ export default function NewRecordContainer() {
                                             updatePlayer({
                                                 ...playerObj,
                                                 faction: e.target.value
-                                            }, idx)
+                                            }, idx);
                                         }}
                                 >
                                     {gameDetail.factions.map((f, index) => {
                                         return <MenuItem value={f} key={index}>{f}</MenuItem>;
                                     })}
                                 </Select>
-                            </FormControl>): null}
-                            <TextField
+                            </FormControl>) : null}
+                            {gameDetail.useScore ? (<TextField
                                 type="number"
                                 label="Score"
                                 value={playerObj.score}
@@ -204,12 +205,23 @@ export default function NewRecordContainer() {
                                     updatePlayer({
                                         ...playerObj,
                                         score: e.target.value
-                                    }, idx)
-                                }}/>
+                                    }, idx);
+                                }}/>) : null}
+                            <Stack direction={"row"}>
+                                <Typography>Win?</Typography>
+                                <Switch checked={playerObj.win} inputProps={{ 'aria-label': 'controlled' }}
+                                    onChange={(e) => {
+                                        updatePlayer({
+                                            ...playerObj,
+                                            win: e.target.checked
+                                        }, idx);
+                                    }}
+                                />
+                            </Stack>
                             <TextField
                                 label="Notes"
                                 multiline={true}
-                                rows={4}
+                                rows={1}
                                 maxRows={4}
                                 value={playerObj.notes}
                                 onChange={(e) => {
@@ -223,13 +235,15 @@ export default function NewRecordContainer() {
                     </Grid>
                 )}
             </Grid>
-            <Grid container direction="row">
-                <Button onClick={addPlayer}>Add Player</Button>
+            <Grid container direction="row" spacing={3}>
                 <Grid item>
-                    <Button onClick={submit}>Submit</Button>
+                    <Button onClick={addPlayer} disabled={!gameSelected}>Add Player</Button>
                 </Grid>
                 <Grid item>
                     <Button onClick={clear}>Clear</Button>
+                </Grid>
+                <Grid item>
+                    <Button onClick={submit} disabled={!gameSelected}>Submit</Button>
                 </Grid>
             </Grid>
         </Grid>

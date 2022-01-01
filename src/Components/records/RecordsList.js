@@ -68,12 +68,6 @@ const headCells = [
         label: 'Board Game',
     },
     {
-        id: 'description',
-        numeric: false,
-        disablePadding: false,
-        label: 'Description',
-    },
-    {
         id: 'startTime',
         numeric: false,
         disablePadding: false,
@@ -144,7 +138,6 @@ function Row(props) {
                 <TableCell component="th" scope="row">
                     {row.gameName}
                 </TableCell>
-                <TableCell align="left" >{row.description}</TableCell>
                 <TableCell align="left" >
                     {row.startTime.replace('T',", ")}
                 </TableCell>
